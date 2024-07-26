@@ -54,8 +54,10 @@ class LoginController {
             })
 
         } catch (error) {
-            //console.log(error)
-            response.status(500).json({ mensagem: 'Erro ao realizar login' })
+            console.log(error)
+            response
+            .status(500)
+            .json({ mensagem: 'Erro ao realizar login' })
         }
     }
 
