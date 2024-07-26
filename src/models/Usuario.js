@@ -31,11 +31,7 @@ const Usuario = connection.define('usuarios', {
       data_nascimento: {
         type: DataTypes.DATE,
         allowNull: true
-      },
-      endereco: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
+      }
 }, {
     paranoid: true
 })

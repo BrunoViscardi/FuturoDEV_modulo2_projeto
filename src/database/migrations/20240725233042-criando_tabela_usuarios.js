@@ -39,11 +39,7 @@ module.exports = {
         data_nascimento: {
           type: Sequelize.DATE,
           allowNull: true
-        },
-        endereco: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },        
+        },     
         createdAt: {
           allowNull: false,
           type: Sequelize.DATE
