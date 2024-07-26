@@ -32,7 +32,7 @@ const Usuario = connection.define('usuarios', {
         type: DataTypes.DATE,
         allowNull: true
       },
-      endereço: {
+      endereco: {
         type: DataTypes.STRING,
         allowNull: false
       },

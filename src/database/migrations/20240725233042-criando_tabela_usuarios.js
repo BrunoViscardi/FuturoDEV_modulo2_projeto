@@ -40,7 +40,7 @@ module.exports = {
           type: Sequelize.DATE,
           allowNull: true
         },
-        endereço: {
+        endereco: {
           type: Sequelize.STRING,
           allowNull: false,
         },        
