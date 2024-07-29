@@ -1,11 +1,21 @@
+const connection = require('../database/connection')
+const Endereco = require('../models/Endereco');
 const Usuario = require('../models/Usuario')
 const padraoEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
-const cpfPattern = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+const cpfPattern = new RegExp(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
+const cepPattern = new RegExp(/^\d{5}-\d{3}$/)
+const estadosBRvalidos = [
+    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+    'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+    'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
 
 
 class UsuarioController {
 
     async criarConta(request, response) {
+        const t = await connection.transaction();
         try {
             const dados = request.body
 
@@ -13,7 +23,7 @@ class UsuarioController {
             if (!dados.nome || !dados.email || !dados.password || !dados.cpf || !dados.endereco) {
                 return response
                     .status(400)
-                    .json({ mensagem: 'O nome, email, senha, cpf e enderço são obrigatórios' })
+                    .json({ mensagem: 'O nome, email, senha, cpf e endereço são obrigatórios' })
             }
 
 
@@ -91,6 +101,38 @@ class UsuarioController {
             }
 
 
+            //Validação: dados obrigatórios
+            if (!dados.endereco.logradouro ||
+                !dados.endereco.numero ||
+                !dados.endereco.bairro ||
+                !dados.endereco.cidade ||
+                !dados.endereco.estado ||
+                !dados.endereco.cep) {
+                return response
+                    .status(400)
+                    .json({ mensagem: 'O logradouro, numero, bairro, cidade, estado e CEP são obrigatórios para o cadastro do enderço.' })
+            }
+
+
+
+            //Validação: esatado com sigla válida
+            if (!estadosBRvalidos.includes(dados.endereco.estado)) {
+                return response
+                    .status(400)
+                    .json({ mensagem: 'A sigla do estado stado brasileiro não é válida (eg., MS)' });
+            }
+
+
+
+            //Validação: CEP no formato adequado xxxxx-xxx
+            if (!cepPattern.test(dados.endereco.cep)) {
+                return response
+                    .status(400)
+                    .json({ mensagem: 'O CEP não está no formato válido xxxxx-xxx' });
+            }
+
+
+
 
             const usuario = await Usuario.create({
                 nome: dados.nome,
@@ -98,9 +140,23 @@ class UsuarioController {
                 password_hash: dados.password,
                 cpf: dados.cpf,
                 sexo: dados.sexo,
-                data_nascimento: dados.data_nascimento,
-                endereco: dados.endereco
-            })
+                data_nascimento: dados.data_nascimento
+            }, { transaction: t })
+
+            const endereco = await Endereco.create({
+                usuarioId: usuario.id,
+                logradouro: dados.endereco.logradouro,
+                numero: dados.endereco.numero,
+                complemento: dados.endereco.complemento,
+                bairro: dados.endereco.bairro,
+                cidade: dados.endereco.cidade,
+                estado: dados.endereco.estado,
+                cep: dados.endereco.cep
+            }, { transaction: t })
+
+
+            await t.commit();
+
 
             response.status(201).json({
                 nome: usuario.nome,
@@ -108,11 +164,8 @@ class UsuarioController {
                 createdAt: usuario.createdAt
             })
 
-
-
-
-
         } catch (error) {
+            await t.rollback();
             //console.log(error)
             if (error.name === 'SequelizeDatabaseError' && error.parent && error.parent.message === 'sintaxe de entrada é inválida para tipo timestamp with time zone: "Invalid date"') {
                 return response
