@@ -32,7 +32,7 @@ class LocalController {
                     .json({ mensagem: 'A latitude não está no formato válido (eg., -22.95192 ou 38.89769).' });
             }
             const latitudeNum = parseFloat(dados.latitude);
-            if (!(latitudeNum >= -90 && latitudeNum <= 90)){
+            if (!(latitudeNum >= -90 && latitudeNum <= 90)) {
                 return response
                     .status(400)
                     .json({ mensagem: 'A latitude deve estar entre -90 e 90.' });
@@ -47,14 +47,14 @@ class LocalController {
                     .json({ mensagem: 'A longitude não está no formato válido (eg., -43.21047 ou 116.57036).' });
             }
             const longitudeNum = parseFloat(dados.longitude);
-            if (!(longitudeNum >= -180 && longitudeNum <= 180)){
+            if (!(longitudeNum >= -180 && longitudeNum <= 180)) {
                 return response
                     .status(400)
                     .json({ mensagem: 'A longitude deve estar entre -180 e 180.' });
             }
 
 
-            
+
             const local = await Local.create({
                 usuarioId: userId,
                 nome: dados.nome,
@@ -75,6 +75,34 @@ class LocalController {
             response
                 .status(500)
                 .json({ mensagem: 'Não foi possível cadastrar novo local de treino' })
+        }
+    }
+
+
+
+    async listarTodos(request, response) {
+        try {
+            const userId = request.userId;
+            const locais = await Local.findAll({
+                where: {
+                    usuarioId: userId,
+                }
+            })
+
+            if(locais.length == 0){
+                return response.status(200).json({
+                    mensagem: 'O usuário ainda não possui locais de treino cadastrados.'
+                })
+
+            }
+
+            response.status(200).json(locais)
+
+        } catch (error) {
+            //console.log(error)
+            response.status(500).json({
+                mensagem: 'Houve um erro ao listar os locais de treino'
+            })
         }
     }
 

@@ -5,6 +5,7 @@ const locaisRoutes = new Router()
 
 
 locaisRoutes.post('/', LocalController.criar)
+locaisRoutes.get('/', LocalController.listarTodos)
 
 
 module.exports = locaisRoutes
