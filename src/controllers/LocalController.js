@@ -86,10 +86,11 @@ class LocalController {
             const locais = await Local.findAll({
                 where: {
                     usuarioId: userId,
-                }
+                },
+                attributes: ['id', 'nome', 'pratica_esportiva', 'localidade']
             })
 
-            if(locais.length == 0){
+            if (locais.length == 0) {
                 return response.status(200).json({
                     mensagem: 'O usuário ainda não possui locais de treino cadastrados.'
                 })
