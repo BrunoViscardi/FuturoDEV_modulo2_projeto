@@ -192,16 +192,14 @@ class LocalController {
 
 
 
-
-            
             // Validação: impede atualização com dados nulos ou strings vazias
             const camposObrigatorios = ['nome', 'pratica_esportiva', 'localidade', 'latitude', 'longitude'];
             for (let i = 0; i < camposObrigatorios.length; i++) {
                 const campo = camposObrigatorios[i];
                 if (dados[campo] === null || dados[campo] === '') {
                     return response
-                    .status(400)
-                    .json({ mensagem: `O campo ${campo} não pode ser nulo ou vazio.` });
+                        .status(400)
+                        .json({ mensagem: `O campo ${campo} não pode ser nulo ou vazio.` });
                 }
             }
 
