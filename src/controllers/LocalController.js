@@ -107,6 +107,36 @@ class LocalController {
         }
     }
 
+
+
+    async listarUm(request, response) {
+        try {
+            const id = request.params.local_id
+            const userId = request.userId
+
+            const local = await Local.findByPk(id)
+
+            if (!local) {
+                return response
+                    .status(404)
+                    .json({ mensagem: 'Não foi encontrado o local de treino com esse ID.' })
+            }
+
+            if (local.usuarioId != userId) {
+                return response
+                    .status(401)
+                    .json({ mensagem: 'Usuário não autorizado.' })
+            }
+
+            response.json(local)
+
+        } catch (error) {
+            response.status(500).json({
+                mensagem: 'Houve um erro ao listar o local de treino.'
+            })
+        }
+    }
+
 }
 
 module.exports = new LocalController()
