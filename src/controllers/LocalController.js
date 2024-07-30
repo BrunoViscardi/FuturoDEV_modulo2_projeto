@@ -122,6 +122,7 @@ class LocalController {
                     .json({ mensagem: 'Não foi encontrado o local de treino com esse ID.' })
             }
 
+            //Validação: garante que apenas o usuário que cadastrou o local possa realizar essa operação
             if (local.usuarioId != userId) {
                 return response
                     .status(401)
@@ -136,6 +137,39 @@ class LocalController {
             })
         }
     }
+
+
+    async deletar(request, response) {
+        try {
+            const id = request.params.local_id
+            const local = await Local.findByPk(id)
+            const userId = request.userId
+
+            if (!local) {
+                response.status(404).json({ mensagem: 'Não foi encontrado o local de treino com esse ID.' })
+            }
+
+            //Validação: garante que apenas o usuário que cadastrou o local possa realizar essa operação
+            if (local.usuarioId != userId) {
+                return response
+                    .status(401)
+                    .json({ mensagem: 'Usuário não autorizado.' })
+            }
+
+            await local.destroy()
+
+            response.status(204).json()
+
+        } catch (error) {
+            console.log(error)
+            response.status(500).json({
+                mensagem: 'Houve um erro ao deletar o local de treino.'
+            })
+        }
+    }
+
+
+    
 
 }
 
