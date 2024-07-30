@@ -192,6 +192,21 @@ class LocalController {
 
 
 
+
+            
+            // Validação: impede atualização com dados nulos ou strings vazias
+            const camposObrigatorios = ['nome', 'pratica_esportiva', 'localidade', 'latitude', 'longitude'];
+            for (let i = 0; i < camposObrigatorios.length; i++) {
+                const campo = camposObrigatorios[i];
+                if (dados[campo] === null || dados[campo] === '') {
+                    return response
+                    .status(400)
+                    .json({ mensagem: `O campo ${campo} não pode ser nulo ou vazio.` });
+                }
+            }
+
+
+
             //Validação latitude
             if (dados.latitude && !latitudePattern.test(dados.latitude)) {
                 return response
@@ -220,9 +235,9 @@ class LocalController {
                     .json({ mensagem: 'A longitude deve estar entre -180 e 180.' });
             }
 
-            
 
-            // Remove campos id e usuarioId do objeto dados para impedir atualização
+
+            // Remove dados id e usuarioId do objeto dados para impedir atualização
             delete dados.id;
             delete dados.usuarioId;
 
