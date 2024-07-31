@@ -19,7 +19,7 @@ routes.use('/login', LoginController.login
         required: true,
         schema: { 
             $email: 'teste@email.com',
-            $password: senha123
+            $password: 'senha123'
         }
     },
  */
