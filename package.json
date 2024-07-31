@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:prod": "node src/index.js",
-    "start:dev": "nodemon src/index.js",
-    "swagger": "node ./autoGen.swagger.js"
+    "start:dev": "node ./autoGen.swagger.js && nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
