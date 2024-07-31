@@ -19,7 +19,22 @@ routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 //Rotas Públicas
 routes.use('/usuario', usuariosRoutes)
-routes.use('/login', LoginController.login)
+routes.use('/login', LoginController.login
+    /*
+    #swagger.tags = ['Usuário'],
+    #swagger.description = 'Endpoint para realizar login no sistema',
+    #swagger.parameters['novoLogin'] = {
+        in: 'body',
+        description: 'Informações do login',
+        required: true,
+        schema: { 
+            $email: 'teste@email.com',
+            $password: 'senha123'
+        }
+    },
+ */
+)
+
 
 
 //Rotas Privadas
