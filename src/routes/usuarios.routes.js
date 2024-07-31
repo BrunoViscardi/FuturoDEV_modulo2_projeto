@@ -16,12 +16,12 @@ usuariosRoutes.post('/', UsuarioController.criarConta
             $email: 'teste@email.com',
             $password: 'senha123',
             $cpf: '123.456.789-11',
-            $sexo: 'outro',
-            $data_nascimento: '02/28/1921',
-            endereco: {
+            sexo: 'outro',
+            data_nascimento: '02/28/1921',
+            $endereco: {
                 $logradouro: 'Rua A',
                 $numero: '123',
-                $complemento: 'Apto 1',
+                complemento: 'Apto 1',
                 $bairro: 'Alfeneiros',
                 $cidade: 'Florianópolis',
                 $estado: 'SC',

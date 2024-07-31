@@ -19,38 +19,144 @@
     }
   },
   "paths": {
-    "/usuario/": {
+    "/login": {
       "post": {
-        "description": "",
+        "tags": [
+          "Usuário"
+        ],
+        "description": "Endpoint para realizar login no sistema",
         "parameters": [
           {
-            "name": "body",
+            "name": "novoLogin",
             "in": "body",
+            "description": "Informações do login",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "teste@email.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "senha123"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/usuario/": {
+      "post": {
+        "tags": [
+          "Usuário"
+        ],
+        "description": "Endpoint para criar uma conta de usuário",
+        "parameters": [
+          {
+            "name": "novoUsuario",
+            "in": "body",
+            "description": "Informações do usuario",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "nome": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "usuarioTeste"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "teste@email.com"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "senha123"
                 },
                 "cpf": {
-                  "example": "any"
-                },
-                "endereco": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "123.456.789-11"
                 },
                 "sexo": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "outro"
                 },
                 "data_nascimento": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "02/28/1921"
+                },
+                "endereco": {
+                  "type": "object",
+                  "properties": {
+                    "logradouro": {
+                      "type": "string",
+                      "example": "Rua A"
+                    },
+                    "numero": {
+                      "type": "string",
+                      "example": "123"
+                    },
+                    "complemento": {
+                      "type": "string",
+                      "example": "Apto 1"
+                    },
+                    "bairro": {
+                      "type": "string",
+                      "example": "Alfeneiros"
+                    },
+                    "cidade": {
+                      "type": "string",
+                      "example": "Florianópolis"
+                    },
+                    "estado": {
+                      "type": "string",
+                      "example": "SC"
+                    },
+                    "cep": {
+                      "type": "string",
+                      "example": "88888-123"
+                    }
+                  },
+                  "required": [
+                    "logradouro",
+                    "numero",
+                    "bairro",
+                    "cidade",
+                    "estado",
+                    "cep"
+                  ]
                 }
-              }
+              },
+              "required": [
+                "nome",
+                "email",
+                "password",
+                "cpf",
+                "endereco"
+              ]
             }
           }
         ],
@@ -69,7 +175,10 @@
     },
     "/local/": {
       "post": {
-        "description": "",
+        "tags": [
+          "Locais de Treino"
+        ],
+        "description": "Endpoint para cadastrar local de treino",
         "parameters": [
           {
             "name": "authorization",
@@ -77,30 +186,45 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "novoLocal",
             "in": "body",
+            "description": "Informações do local de treino",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "nome": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Álvaro Arquearia RT"
                 },
                 "pratica_esportiva": {
-                  "example": "any"
-                },
-                "localidade": {
-                  "example": "any"
-                },
-                "latitude": {
-                  "example": "any"
-                },
-                "longitude": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Arco e flecha"
                 },
                 "descricao": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Local de treino"
+                },
+                "localidade": {
+                  "type": "string",
+                  "example": "Sul da ilha de Florianópolis"
+                },
+                "latitude": {
+                  "type": "string",
+                  "example": "-43.21046"
+                },
+                "longitude": {
+                  "type": "string",
+                  "example": "-47.21046"
                 }
-              }
+              },
+              "required": [
+                "nome",
+                "pratica_esportiva",
+                "localidade",
+                "latitude",
+                "longitude"
+              ]
             }
           }
         ],
@@ -120,7 +244,10 @@
         }
       },
       "get": {
-        "description": "",
+        "tags": [
+          "Locais de Treino"
+        ],
+        "description": "Endpoint para listar todos os locais de treino do usuário",
         "parameters": [
           {
             "name": "authorization",
@@ -146,13 +273,17 @@
     },
     "/local/{local_id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Locais de Treino"
+        ],
+        "description": "Endpoint para listar um local de treino específico",
         "parameters": [
           {
             "name": "local_id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID do local de treino"
           },
           {
             "name": "authorization",
@@ -179,13 +310,17 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Locais de Treino"
+        ],
+        "description": "Endpoint para deletar um local de treino específico",
         "parameters": [
           {
             "name": "local_id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID do local de treino"
           },
           {
             "name": "authorization",
@@ -212,13 +347,17 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Locais de Treino"
+        ],
+        "description": "Endpoint para atualizar um local de treino específico",
         "parameters": [
           {
             "name": "local_id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID do local de treino"
           },
           {
             "name": "authorization",
@@ -228,20 +367,34 @@
           {
             "name": "body",
             "in": "body",
+            "description": "Dados para atualizar o local de treino",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Álvaro Arquearia RT"
+                },
+                "pratica_esportiva": {
+                  "type": "string",
+                  "example": "Tiro ao Alvo"
+                },
+                "descricao": {
+                  "type": "string",
+                  "example": "Local de treino"
+                },
+                "localidade": {
+                  "type": "string",
+                  "example": "Sul da ilha de Florianópolis"
+                },
                 "latitude": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "-43.21046"
                 },
                 "longitude": {
-                  "example": "any"
-                },
-                "id": {
-                  "example": "any"
-                },
-                "usuarioId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "47.21046"
                 }
               }
             }

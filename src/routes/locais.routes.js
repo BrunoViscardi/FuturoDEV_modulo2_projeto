@@ -14,11 +14,11 @@ locaisRoutes.post('/', LocalController.criar
         required: true,
         schema: { 
             $nome: 'Álvaro Arquearia RT',
-            $pratica_esportiva': 'Arco e flecha',
-            $descricao':'Local de treino',
-            $localidade':'Sul da ilha de Florianópolis',
-            $latitude': '-43.21046',
-            $longitude':'-47.21046'
+            $pratica_esportiva: 'Arco e flecha',
+            descricao:'Local de treino',
+            $localidade:'Sul da ilha de Florianópolis',
+            $latitude: '-43.21046',
+            $longitude:'-47.21046'
         }
     },
     */
@@ -68,12 +68,12 @@ locaisRoutes.put('/:local_id', LocalController.atualizar
         description: 'Dados para atualizar o local de treino',
         required: true,
         schema: {
-            $nome: 'Álvaro Arquearia RT',
-            $pratica_esportiva: 'Arco e flecha',
-            $descricao: 'Local de treino',
-            $localidade: 'Sul da ilha de Florianópolis',
-            $latitude: '-43.21046',
-            $longitude: '-47.21046'
+            nome: 'Álvaro Arquearia RT',
+            pratica_esportiva: 'Tiro ao Alvo',
+            descricao: 'Local de treino',
+            localidade: 'Sul da ilha de Florianópolis',
+            latitude: '-43.21046',
+            longitude: '47.21046'
         }
     },
     */

@@ -19,7 +19,7 @@ routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 //Rotas Públicas
 routes.use('/usuario', usuariosRoutes)
-routes.use('/login', LoginController.login
+routes.post('/login', LoginController.login
     /*
     #swagger.tags = ['Usuário'],
     #swagger.description = 'Endpoint para realizar login no sistema',
