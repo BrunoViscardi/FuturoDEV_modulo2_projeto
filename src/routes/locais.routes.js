@@ -77,6 +77,18 @@ locaisRoutes.put('/:local_id', LocalController.atualizar
     },
     */
 )
+locaisRoutes.get('/:local_id/maps', LocalController.linkMaps
+    /*
+    #swagger.tags = ['Locais de Treino'],
+    #swagger.description = 'Endpoint para gerar um link do Google Maps do local de treino específico',
+    #swagger.parameters['local_id'] = {
+        in: 'path',
+        description: 'ID do local de treino',
+        required: true,
+        type: 'integer'
+    },
+    */
+)
 
 
 module.exports = locaisRoutes

@@ -40,8 +40,8 @@ class LocalController {
                 cepInfo = await getByCep(dados.cep)
             } catch (error) {
                 return response
-                .status(404)
-                .json({ mensagem: error.message });
+                    .status(404)
+                    .json({ mensagem: error.message });
             }
 
 
@@ -68,7 +68,6 @@ class LocalController {
                 .json({ mensagem: 'Não foi possível cadastrar novo local de treino' })
         }
     }
-
 
 
     async listarTodos(request, response) {
@@ -159,7 +158,6 @@ class LocalController {
     }
 
 
-
     async atualizar(request, response) {
         try {
             const id = request.params.local_id
@@ -213,7 +211,7 @@ class LocalController {
             //Validação longitude
             if (dados.longitude && !longitudePattern.test(dados.longitude)) {
                 return response
-                    .status(400) 
+                    .status(400)
                     .json({ mensagem: 'Longitude inválida. Use 5 casas decimais (eg., -43.21047 e 116.57000).' });
             }
             const longitudeNum = parseFloat(dados.longitude);
@@ -239,6 +237,45 @@ class LocalController {
             response.
                 status(500).
                 json({ mensagem: 'Houve um erro ao atualizar o local de treino.' })
+        }
+    }
+
+
+    async linkMaps(request, response) {
+        try {
+            const id = request.params.local_id
+            const userId = request.userId
+
+            const local = await Local.findByPk(id, {
+                attributes: ['usuarioId', 'nome', 'latitude', 'longitude']
+            })
+
+
+            if (!local) {
+                return response
+                    .status(404)
+                    .json({ mensagem: 'Não foi encontrado o local de treino com esse ID.' })
+            }
+
+
+            //Validação: garante que apenas o usuário que cadastrou o local possa realizar essa operação
+            if (local.usuarioId != userId) {
+                return response
+                    .status(401)
+                    .json({ mensagem: 'Usuário não autorizado.' })
+            }
+
+
+            response.status(200).json({
+                nome: local.nome,
+                link: `https://www.google.com/maps?q=${local.latitude},${local.longitude}`
+            })
+
+
+        } catch (error) {
+            response.status(500).json({
+                mensagem: 'Houve um erro ao gerar o link para o Google Maps.'
+            })
         }
     }
 

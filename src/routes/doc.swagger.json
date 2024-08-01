@@ -399,6 +399,42 @@
           }
         }
       }
+    },
+    "/local/{local_id}/maps": {
+      "get": {
+        "tags": [
+          "Locais de Treino"
+        ],
+        "description": "Endpoint para gerar um link do Google Maps do local de treino específico",
+        "parameters": [
+          {
+            "name": "local_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do local de treino"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "security": [
