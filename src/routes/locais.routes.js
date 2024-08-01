@@ -17,8 +17,7 @@ locaisRoutes.post('/', LocalController.criar
             $pratica_esportiva: 'Arco e flecha',
             descricao:'Local de treino',
             $localidade:'Sul da ilha de Florianópolis',
-            $latitude: '-43.21046',
-            $longitude:'-47.21046'
+            $cep: '88040-535',
         }
     },
     */

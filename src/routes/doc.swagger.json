@@ -192,21 +192,16 @@
                   "type": "string",
                   "example": "Sul da ilha de Florianópolis"
                 },
-                "latitude": {
+                "cep": {
                   "type": "string",
-                  "example": "-43.21046"
-                },
-                "longitude": {
-                  "type": "string",
-                  "example": "-47.21046"
+                  "example": "88040-535"
                 }
               },
               "required": [
                 "nome",
                 "pratica_esportiva",
                 "localidade",
-                "latitude",
-                "longitude"
+                "cep"
               ]
             }
           }
@@ -220,6 +215,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"

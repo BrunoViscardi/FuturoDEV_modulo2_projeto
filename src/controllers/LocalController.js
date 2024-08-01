@@ -1,6 +1,9 @@
 const Local = require("../models/Local")
+const getByCep = require('../services/cep.services')
+const cepPattern = new RegExp(/^\d{5}-\d{3}$/)
 const latitudePattern = RegExp(/^-?\d{1,2}\.\d{5}$/);
 const longitudePattern = RegExp(/^-?\d{1,3}\.\d{5}$/);
+
 
 
 
@@ -16,41 +19,29 @@ class LocalController {
             if (!dados.nome ||
                 !dados.pratica_esportiva ||
                 !dados.localidade ||
-                !dados.latitude ||
-                !dados.longitude) {
+                !dados.cep) {
                 return response
                     .status(400)
-                    .json({ mensagem: 'Nome, prática esportiva, localidade, latitude e longitude são obrigatórios' })
+                    .json({ mensagem: 'Nome, prática esportiva, localidade e CEP são obrigatórios' })
+            }
+
+            //Validação: CEP no formato adequado xxxxx-xxx
+            if (!cepPattern.test(dados.cep)) {
+                return response
+                    .status(400)
+                    .json({ mensagem: 'O CEP não está no formato válido xxxxx-xxx' });
             }
 
 
 
-            //Validação latitude
-            if (!latitudePattern.test(dados.latitude)) {
+            // Obter informações do CEP
+            let cepInfo;
+            try {
+                cepInfo = await getByCep(dados.cep)
+            } catch (error) {
                 return response
-                    .status(400)
-                    .json({ mensagem: 'A latitude não está no formato válido (eg., -22.95192 ou 38.89769).' });
-            }
-            const latitudeNum = parseFloat(dados.latitude);
-            if (!(latitudeNum >= -90 && latitudeNum <= 90)) {
-                return response
-                    .status(400)
-                    .json({ mensagem: 'A latitude deve estar entre -90 e 90.' });
-            }
-
-
-
-            //Validação longitude
-            if (!longitudePattern.test(dados.longitude)) {
-                return response
-                    .status(400)
-                    .json({ mensagem: 'A longitude não está no formato válido (eg., -43.21047 ou 116.57036).' });
-            }
-            const longitudeNum = parseFloat(dados.longitude);
-            if (!(longitudeNum >= -180 && longitudeNum <= 180)) {
-                return response
-                    .status(400)
-                    .json({ mensagem: 'A longitude deve estar entre -180 e 180.' });
+                .status(404)
+                .json({ mensagem: error.message });
             }
 
 
@@ -61,8 +52,8 @@ class LocalController {
                 pratica_esportiva: dados.pratica_esportiva,
                 descricao: dados.descricao,
                 localidade: dados.localidade,
-                latitude: dados.latitude,
-                longitude: dados.longitude
+                latitude: cepInfo.latitude,
+                longitude: cepInfo.longitude
             })
 
             response.status(201).json({
@@ -106,7 +97,6 @@ class LocalController {
             })
         }
     }
-
 
 
     async listarUm(request, response) {
@@ -209,7 +199,7 @@ class LocalController {
             if (dados.latitude && !latitudePattern.test(dados.latitude)) {
                 return response
                     .status(400)
-                    .json({ mensagem: 'A latitude não está no formato válido (eg., -22.95192 ou 38.89769).' });
+                    .json({ mensagem: 'Latitude inválida. Use 5 casas decimais (eg., -22.95192 ou 38.89700).' });
             }
             const latitudeNum = parseFloat(dados.latitude);
             if (dados.latitude && !(latitudeNum >= -90 && latitudeNum <= 90)) {
@@ -223,8 +213,8 @@ class LocalController {
             //Validação longitude
             if (dados.longitude && !longitudePattern.test(dados.longitude)) {
                 return response
-                    .status(400)
-                    .json({ mensagem: 'A longitude não está no formato válido (eg., -43.21047 ou 116.57036).' });
+                    .status(400) 
+                    .json({ mensagem: 'Longitude inválida. Use 5 casas decimais (eg., -43.21047 e 116.57000).' });
             }
             const longitudeNum = parseFloat(dados.longitude);
             if (dados.longitude && !(longitudeNum >= -180 && longitudeNum <= 180)) {
