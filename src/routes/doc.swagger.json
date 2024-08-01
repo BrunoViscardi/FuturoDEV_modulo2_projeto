@@ -111,9 +111,9 @@
                 "endereco": {
                   "type": "object",
                   "properties": {
-                    "logradouro": {
+                    "cep": {
                       "type": "string",
-                      "example": "Rua A"
+                      "example": "88040-535"
                     },
                     "numero": {
                       "type": "string",
@@ -122,31 +122,11 @@
                     "complemento": {
                       "type": "string",
                       "example": "Apto 1"
-                    },
-                    "bairro": {
-                      "type": "string",
-                      "example": "Alfeneiros"
-                    },
-                    "cidade": {
-                      "type": "string",
-                      "example": "Florianópolis"
-                    },
-                    "estado": {
-                      "type": "string",
-                      "example": "SC"
-                    },
-                    "cep": {
-                      "type": "string",
-                      "example": "88888-123"
                     }
                   },
                   "required": [
-                    "logradouro",
-                    "numero",
-                    "bairro",
-                    "cidade",
-                    "estado",
-                    "cep"
+                    "cep",
+                    "numero"
                   ]
                 }
               },
@@ -166,6 +146,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"

@@ -19,13 +19,9 @@ usuariosRoutes.post('/', UsuarioController.criarConta
             sexo: 'outro',
             data_nascimento: '02/28/1921',
             $endereco: {
-                $logradouro: 'Rua A',
+                $cep: '88040-535',
                 $numero: '123',
-                complemento: 'Apto 1',
-                $bairro: 'Alfeneiros',
-                $cidade: 'Florianópolis',
-                $estado: 'SC',
-                $cep: '88888-123'
+                complemento: 'Apto 1'                
             }
         }
     },

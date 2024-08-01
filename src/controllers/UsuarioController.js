@@ -1,14 +1,11 @@
 const connection = require('../database/connection')
-const Endereco = require('../models/Endereco');
+const Endereco = require('../models/Endereco')
 const Usuario = require('../models/Usuario')
+const getByCep = require('../services/cep.services')
 const padraoEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
 const cpfPattern = new RegExp(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
 const cepPattern = new RegExp(/^\d{5}-\d{3}$/)
-const estadosBRvalidos = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
-    'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
-    'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-];
+
 
 
 
@@ -83,7 +80,7 @@ class UsuarioController {
 
 
 
-            //Validação: sexo "masculino", "feminino" ou "outros"
+            //Validação: sexo "masculino", "feminino" ou "outro"
             if (dados.sexo && (dados.sexo !== 'masculino' && dados.sexo !== 'feminino' && dados.sexo !== 'outro')) {
                 return response
                     .status(400)
@@ -101,25 +98,11 @@ class UsuarioController {
             }
 
 
-            //Validação: dados obrigatórios
-            if (!dados.endereco.logradouro ||
-                !dados.endereco.numero ||
-                !dados.endereco.bairro ||
-                !dados.endereco.cidade ||
-                !dados.endereco.estado ||
-                !dados.endereco.cep) {
+            //Validação: dados obrigatórios do endereço
+            if (!dados.endereco.cep || !dados.endereco.numero) {
                 return response
                     .status(400)
-                    .json({ mensagem: 'O logradouro, numero, bairro, cidade, estado e CEP são obrigatórios para o cadastro do enderço.' })
-            }
-
-
-
-            //Validação: esatado com sigla válida
-            if (!estadosBRvalidos.includes(dados.endereco.estado)) {
-                return response
-                    .status(400)
-                    .json({ mensagem: 'A sigla do estado stado brasileiro não é válida (eg., MS)' });
+                    .json({ mensagem: 'O CEP e o número são obrigatórios para o cadastro do enderço.' })
             }
 
 
@@ -130,6 +113,19 @@ class UsuarioController {
                     .status(400)
                     .json({ mensagem: 'O CEP não está no formato válido xxxxx-xxx' });
             }
+
+
+
+            // Obter informações do CEP
+            let cepInfo;
+            try {
+                cepInfo = await getByCep(dados.endereco.cep)
+            } catch (error) {
+                return response
+                .status(404)
+                .json({ mensagem: error.message });
+            }
+
 
 
 
@@ -145,12 +141,12 @@ class UsuarioController {
 
             const endereco = await Endereco.create({
                 usuarioId: usuario.id,
-                logradouro: dados.endereco.logradouro,
+                logradouro: cepInfo.logradouro,
                 numero: dados.endereco.numero,
                 complemento: dados.endereco.complemento,
-                bairro: dados.endereco.bairro,
-                cidade: dados.endereco.cidade,
-                estado: dados.endereco.estado,
+                bairro: cepInfo.bairro,
+                cidade: cepInfo.cidade,
+                estado: cepInfo.estado,
                 cep: dados.endereco.cep
             }, { transaction: t })
 
@@ -166,7 +162,7 @@ class UsuarioController {
 
         } catch (error) {
             await t.rollback();
-            //console.log(error)
+            console.log(error)
             if (error.name === 'SequelizeDatabaseError' && error.parent && error.parent.message === 'sintaxe de entrada é inválida para tipo timestamp with time zone: "Invalid date"') {
                 return response
                     .status(400)
