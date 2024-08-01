@@ -5,12 +5,9 @@ async function getByCep(cep) {
     try {
         const response = await axios.get(`${linkCepApi}${cep}`)
 
-        if (!response.data || response.data.length === 0) {
-            throw new Error('CEP não encontrado');
-        }
-
         const data = response.data;
-        const busca = {
+
+        const dados = {
             logradouro: `${data.address_type} ${data.address_name}`,
             bairro: data.district,
             cidade: data.city,
@@ -18,11 +15,20 @@ async function getByCep(cep) {
             latitude: data.lat,
             longitude: data.lng
         }
-        return busca
+        return dados
 
 
     } catch (error) {
-        return { erro: 'CEP não encontrado' }
+        if (error.response && error.response.data) {
+            const data = error.response.data;
+            if (data.code === 'not_found') {
+                throw new Error(data.message);
+            }
+            if (data.code === 'invalid') {
+                throw new Error('CEP inválido');
+            }
+        }
+        throw new Error(`Erro ao requisitar informações a partir do CEP: ${error.message}`)
     }
 }
 
