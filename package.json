@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:prod": "node src/index.js",
+    "start:prod": "node ./autoGen.swagger.js && node src/index.js",
     "start:dev": "node ./autoGen.swagger.js && nodemon src/index.js"
   },
   "keywords": [],
