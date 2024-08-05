@@ -74,9 +74,10 @@ npx sequelize-cli migration:generate --name criando_tabela_usuarios
 ```
 
   
+![diagrama_banco_dados_relacional](https://github.com/user-attachments/assets/50414016-7f5c-4e01-8b38-492e3fa9af9a)
 
 
-![diagrama_banco_dados_relacional](https://github.com/user-attachments/assets/26bc01ad-0f62-40af-a3a7-42b3f0cc9a0f)
+
 
 
 
